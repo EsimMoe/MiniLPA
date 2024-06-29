@@ -1,0 +1,15 @@
+/.idea/
+/logs/
+/languages
+/setting.yaml
+
+/windows_x86/
+/windows_aarch64/
+/linux_x86/
+/macos_univeral/
+
+.DS_Store
+.gradle
+build
+eum-manifest.json
+ci-manifest.json
