@@ -3,7 +3,7 @@ param(
     [Switch]$NativeExecutable,
 
     [ValidateSet('app-image', 'exe', 'msi', 'rpm', 'deb', 'pkg', 'dmg')]
-    [String]$NativeExecutableType=$null,
+    [String]$NativeExecutableType,
 
     [Switch]$NativeWayland,
 
@@ -14,9 +14,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$ProjectPath = Resolve-Path "$PSScriptRoot/../"
+$ProjectRootPath = Resolve-Path "$PSScriptRoot/../"
 
-$GradlewPath = Resolve-Path "$ProjectPath/gradlew"
+$GradlewPath = Resolve-Path "$ProjectRootPath/gradlew"
 
 if ($IsWindows)
 {
@@ -46,7 +46,7 @@ if ($SkipSetupResources)
 }
 else
 {
-    & "$PSScriptRoot/Update-Euicc-Manifests.ps1" -CheckExists
+    & "$PSScriptRoot/Update-Euicc-Info.ps1" -CheckExists
 }
 
 if ($GithubToken)
@@ -54,12 +54,13 @@ if ($GithubToken)
     $BuildArgument += "-Pgithub-token=$GithubToken"
 }
 
-& {
-    Set-Location $ProjectPath
-    & $GradlewPath $BuildArgument --info --stacktrace
-}
+Push-Location $ProjectRootPath
+& $GradlewPath $BuildArgument --info --stacktrace
+Pop-Location
 
-$DistFolderPath = "$ProjectPath/build/dist/"
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+$DistFolderPath = "$ProjectRootPath/build/dist/"
 
 $OS = if ($IsWindows) { 'Windows' }
 elseif ($IsLinux) { 'Linux' }
@@ -78,4 +79,13 @@ if ($NativeWayland)
     $Name += '-Wayland'
 }
 
-Get-ChildItem -Path $DistFolderPath -File -Filter 'MiniLPA*' | ForEach-Object { Move-Item -Path $_.FullName -Destination "$DistFolderPath$Name$($_.Extension)" -Force }
+if ($NativeExecutableType -eq 'app-image')
+{
+    $AppImageFolderPath = "$DistFolderPath/MiniLPA"
+    Compress-Archive -Path "$AppImageFolderPath/*" -DestinationPath "$DistFolderPath/$Name.zip" -Force
+    Remove-Item -Path $AppImageFolderPath -Recurse -Force
+}
+else
+{
+    Get-ChildItem -Path $DistFolderPath -File -Filter 'MiniLPA*' | ForEach-Object { Move-Item -Path $_.FullName -Destination "$DistFolderPath$Name$($_.Extension)" -Force }
+}

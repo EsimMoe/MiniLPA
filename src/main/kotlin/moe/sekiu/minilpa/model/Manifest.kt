@@ -69,7 +69,7 @@ sealed class Manifest<T : Any>
 
         fun loadManifests()
         {
-            if (EumManifest.loadManifest() || CIManifest.loadManifest())
+            if (EumManifest.loadManifest() or CIManifest.loadManifest())
             {
                 setting.update { `euicc-info-update-time` = BuildConfig.EUICC_INFO_UPDATE_TIME }
             }

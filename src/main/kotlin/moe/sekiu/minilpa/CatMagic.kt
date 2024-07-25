@@ -3,6 +3,9 @@ package moe.sekiu.minilpa
 import java.lang.invoke.MethodHandles
 import sun.misc.Unsafe
 
+/**
+ *  Meow ~
+ */
 object CatMagic
 {
     val usf = with(Unsafe::class.java.getDeclaredField("theUnsafe"))

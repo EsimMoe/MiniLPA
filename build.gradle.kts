@@ -81,7 +81,10 @@ buildscript {
 
 buildConfig {
     packageName("moe.sekiu.minilpa")
-    buildConfigField("IS_PACKAGED", gradle.startParameter.taskNames.firstOrNull() == "jpackage" || project.switchProperty("is-package"))
+    buildConfigField("IS_PACKAGED",
+        (gradle.startParameter.taskNames.firstOrNull() == "jpackage" || project.switchProperty("is-package"))
+                && project.findProperty("type") != "app-image"
+    )
     buildConfigField("VERSION", "$version")
 }
 
@@ -142,7 +145,10 @@ task("setupResources")
         if (!skip)
         {
             val lpacLatestBuildTime = latestRelease.createdAt.time
-            if (buildPath.resolve("lpac").notExists() || lpacLatestBuildTime > lpacBuildTime)
+            if (target == "all" ||
+                buildPath.resolve("lpac").notExists() ||
+                buildPath.resolve("lpac").resolve(target).notExists() ||
+                lpacLatestBuildTime > lpacBuildTime)
             {
                 if (target == "all")
                 {
@@ -169,9 +175,6 @@ task("setupResources")
             buildConfigField("EUICC_INFO_UPDATE_TIME", eUICCInfoUpdateTimePath.readText().toLong())
         }
     }
-
-
-
 }
 
 task("setupjpackage")
@@ -212,6 +215,7 @@ tasks.jpackage {
     mainJar = archiveFileName
     mainClass = application.mainClass.get()
     javaOptions = mutableListOf("-Dfile.encoding=UTF-8")
+    addModules = listOf("java.base", "java.desktop", "java.naming", "jdk.unsupported")
 
     if (project.hasProperty("type"))
     {
@@ -220,26 +224,32 @@ tasks.jpackage {
     }
 
     if (project.hasProperty("native-wayland")) javaOptions.add("Dawt.toolkit.name=WLToolkit")
-    if (type != ImageType.APP_IMAGE)
-    {
-        windows {
-            icon = projectDir.toPath().resolve("src/main/icons/window.ico").pathString
+    windows {
+        icon = projectDir.toPath().resolve("src/main/icons/window.ico").pathString
+        if (type != ImageType.APP_IMAGE)
+        {
             winDirChooser = true
             winMenu = true
             winMenuGroup = "MiniLPA"
             winShortcut = true
             winShortcutPrompt = true
         }
+    }
 
-        linux {
-            icon = projectDir.toPath().resolve("src/main/icons/window.png").pathString
+    linux {
+        icon = projectDir.toPath().resolve("src/main/icons/window.png").pathString
+        if (type != ImageType.APP_IMAGE)
+        {
             linuxShortcut = true
             linuxMenuGroup = "MiniLPA"
             installDir = "/usr/"
         }
+    }
 
-        mac {
-            icon = projectDir.toPath().resolve("src/main/icons/window.icns").pathString
+    mac {
+        icon = projectDir.toPath().resolve("src/main/icons/window.icns").pathString
+        if (type != ImageType.APP_IMAGE)
+        {
             macPackageIdentifier = "moe.sekiu.MiniLPA"
             macAppCategory = "MiniLPA"
         }
