@@ -14,11 +14,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { label: windows-latest, os: Windows, arch: x86_64,  type: msi }
-          - { label: macos-13,       os: macOS,   arch: x86_64,  type: dmg }
-          - { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg }
-          - { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg }
-          - { label: macos-latest,   os: macOS,   arch: aarch64, type: pkg }
+          - { label: windows-latest, os: Windows, arch: x86_64,  type: msi       }
+          - { label: windows-latest, os: Windows, arch: x86_64,  type: app-image }
+          - { label: macos-13,       os: macOS,   arch: x86_64,  type: dmg       }
+          - { label: macos-13,       os: macOS,   arch: x86_64,  type: pkg       }
+          - { label: macos-13,       os: macOS,   arch: x86_64,  type: app-image }
+          - { label: macos-latest,   os: macOS,   arch: aarch64, type: dmg       }
+          - { label: macos-latest,   os: macOS,   arch: aarch64, type: pkg       }
+          - { label: macos-latest,   os: macOS,   arch: aarch64, type: app-image }
     steps:
       - name: Checkout MiniLPA
         uses: actions/checkout@v4
@@ -54,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [ deb, rpm ]
+        type: [ deb, rpm, app-image ]
         wayland: [ true, false ]
         include:
           - os: Linux
@@ -79,7 +82,7 @@ jobs:
       - name: Build Native Executable
         shell: pwsh
         run: |
-          ./scripts/Build.ps1 -NativeExecutable -NativeExecutableType ${{ matrix.type }} -NativeWayland:$${{ matrix.wayland }} -GithubToken ${{ secrets.GH_TOKEN }}
+          ./scripts/Build.ps1 -NativeExecutable -NativeExecutableType ${{ matrix.type }} -NativeWayland:$${{ matrix.wayland }} -GithubToken ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Short Commit Id
         shell: pwsh
