@@ -8,6 +8,7 @@ import java.awt.FlowLayout
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JCheckBox
+import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.JLabel
 import javax.swing.JOptionPane
@@ -56,20 +57,20 @@ object Actions
             val matchingIdField = JTextField()
             val confirmCodeLabel = JLabel(language.`confirmation-code`)
             val confirmCodeField = JTextField()
-            val clearOutlineListener = object : DocumentListener
+            class ClearOutlineListener(val component : JComponent) : DocumentListener
             {
-                override fun insertUpdate(event : DocumentEvent) { confirmCodeField.outlineClear() }
+                override fun insertUpdate(event : DocumentEvent) { component.outlineClear() }
 
                 override fun removeUpdate(event : DocumentEvent) { }
 
                 override fun changedUpdate(event : DocumentEvent) { }
             }
-            confirmCodeField.document.addDocumentListener(clearOutlineListener)
+            confirmCodeField.document.addDocumentListener(ClearOutlineListener(confirmCodeField))
             val confirmCodeCheckBox = JCheckBox(language.`confirmation-code-required`)
             confirmCodeCheckBox.enableWhenChecked(confirmCodeLabel, confirmCodeField) { if (!it) confirmCodeField.outlineClear() }
             val IMEILabel = JLabel(language.IMEI)
             val IMEIField = JTextField()
-            IMEIField.document.addDocumentListener(clearOutlineListener)
+            IMEIField.document.addDocumentListener(ClearOutlineListener(IMEIField))
             val IMEICheckBox = JCheckBox(language.`specified-IMEI`)
             IMEICheckBox.enableWhenChecked(IMEILabel, IMEIField) { if (!it) IMEIField.outlineClear() }
             val processInstallNotificationCheckbox = JCheckBox(language.`process-install-notification`, setting.`notification-behavior`.install.process)
