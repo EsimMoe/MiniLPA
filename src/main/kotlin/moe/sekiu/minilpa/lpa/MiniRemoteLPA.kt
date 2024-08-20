@@ -35,8 +35,6 @@ suspend fun main()
 
 class MiniRemoteLPA : LPABackend<RemoteCard>
 {
-    override var selectedDevice : RemoteCard? = null
-
     lateinit var wsSession : WebSocketSession
     val waiting = mutableMapOf<UUID, CompletableDeferred<LPACIO>>()
 

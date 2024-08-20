@@ -27,8 +27,6 @@ class LPACExecutor() : LPABackend<Driver>
 {
     private val log = logger()
 
-    override var selectedDevice : Driver? = null
-
     suspend fun getDeviceList() : List<Driver> = decode(execute("driver", "apdu", "list").data)
 
     override suspend fun getChipInfo() : ChipInfo = decode(execute("chip", "info").data)
@@ -79,7 +77,7 @@ class LPACExecutor() : LPABackend<Driver>
         val env = mutableMapOf<String, String>()
         if (setting.debug.libeuicc.apdu) env["LIBEUICC_DEBUG_APDU"] = "true"
         if (setting.debug.libeuicc.http) env["LIBEUICC_DEBUG_HTTP"] = "true"
-        selectedDevice?.run { env["DRIVER_IFID"] = cast<Driver>().env }
+        LocalProfileAssistant.devices.selectedItem?.run { env["DRIVER_IFID"] = cast<Driver>().env }
         var lpacout : LPACIO? = null
         process(
             *(arrayOf(lpacFile.canonicalPath) + commands),

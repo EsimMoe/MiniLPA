@@ -8,13 +8,6 @@ import moe.sekiu.minilpa.model.Profile
 
 interface LPABackend<D : Device>
 {
-    var selectedDevice : D?
-
-    fun set(d : D?)
-    {
-        selectedDevice = d
-    }
-
     suspend fun getChipInfo() : ChipInfo
 
     suspend fun getProfileList() : List<Profile>

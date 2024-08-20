@@ -44,7 +44,6 @@ object LocalProfileAssistant
                 devices.addAll(backend.cast<LPACExecutor>().getDeviceList())
                 val device = devices.getElementAt(0)
                 devices.selectedItem = device
-                backend.cast<LPABackend<Device>>().selectedDevice = device
             }
         }
     }

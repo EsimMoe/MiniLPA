@@ -27,6 +27,7 @@ import moe.sekiu.minilpa.exception.OperationFailureException
 import moe.sekiu.minilpa.freeze
 import moe.sekiu.minilpa.language
 import moe.sekiu.minilpa.logger
+import moe.sekiu.minilpa.lpa.LocalProfileAssistant
 import moe.sekiu.minilpa.setup
 import moe.sekiu.minilpa.setupFontSize
 import moe.sekiu.minilpa.ui.component.MiniProgressDialog
@@ -148,7 +149,7 @@ class MainFrame : JFrame()
         block : suspend () -> T
     ) : T?
     {
-        if (requireDevice && backend.selectedDevice == null)
+        if (requireDevice && LocalProfileAssistant.devices.selectedItem == null)
         {
             JOptionPane.showMessageDialog(
                 this@MainFrame,
