@@ -86,6 +86,7 @@ buildConfig {
                 && project.findProperty("type") != "app-image"
     )
     buildConfigField("VERSION", "$version")
+    buildConfigField("SHORT_COMMIT_ID", project.findProperty("short-commit-id") as String? ?: "internal")
 }
 
 application {

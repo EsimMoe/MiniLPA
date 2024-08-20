@@ -147,7 +147,7 @@ fun extractResources()
     if (BuildConfig.LPAC_BUILD_TIME > setting.`lpac-build-time`)
     {
         ZipInputStream(bufferedResourceStream("$platform.zip")).unzip(lpacFolder)
-        setting.update { `lpac-build-time` = BuildConfig.LPAC_BUILD_TIME  }
+        setting.update { `lpac-build-time` = BuildConfig.LPAC_BUILD_TIME }
     }
 }
 
@@ -160,6 +160,7 @@ fun setupLogBack() : Logger
     log.info("Runtime Version: ${SystemUtils.JAVA_VM_VERSION} ${SystemUtils.OS_ARCH}")
     log.info("VM: ${SystemUtils.JAVA_VM_NAME}, ${SystemUtils.JAVA_VM_VENDOR}")
     log.info("IS_PACKAGE -> ${BuildConfig.IS_PACKAGED}")
+    log.info("SHORT_COMMIT_ID -> ${BuildConfig.SHORT_COMMIT_ID}")
     log.info("AppDataFolder -> ${appDataFolder.canonicalPath}")
     return log
 }

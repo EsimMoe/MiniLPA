@@ -54,6 +54,12 @@ if ($GithubToken)
     $BuildArgument += "-Pgithub-token=$GithubToken"
 }
 
+git diff --no-ext-diff --quiet --exit-code
+$IsDirty = $LASTEXITCODE
+$ShortCommitId = git rev-parse --short HEAD
+if ($IsDirty) { $ShortCommitId = "$ShortCommitId-dirty" }
+$BuildArgument += "-Pshort-commit-id=$ShortCommitId"
+
 Push-Location $ProjectRootPath
 & $GradlewPath $BuildArgument --info --stacktrace
 Pop-Location
@@ -87,5 +93,20 @@ if ($NativeExecutableType -eq 'app-image')
 }
 else
 {
-    Get-ChildItem -Path $DistFolderPath -File -Filter 'MiniLPA*' | ForEach-Object { Move-Item -Path $_.FullName -Destination "$DistFolderPath$Name$($_.Extension)" -Force }
+    Get-ChildItem -Path $DistFolderPath -File -Filter "MiniLPA*$NativeExecutableType" | ForEach-Object {
+        $DistPath = "$DistFolderPath$Name$( $_.Extension )"
+        Move-Item -Path $_.FullName -Destination $DistPath -Force
+        if ($NativeExecutableType -eq "msi")
+        {
+            if ($IsDirty) { $Guid = [System.Guid]::NewGuid() }
+            else
+            {
+                $CommitId = git rev-parse HEAD
+                $CommitIdBytes = [System.Text.Encoding]::UTF8.GetBytes($CommitId)
+                $GuidBytes = $CommitIdBytes[0..15] -as [Byte[]]
+                $Guid = [System.Guid]::new($guidBytes)
+            }
+            & "$PSScriptRoot/Update-MSI-ProductCode.ps1" -Path $DistPath -ProductCode "{$($Guid.Guid)}"
+        }
+    }
 }

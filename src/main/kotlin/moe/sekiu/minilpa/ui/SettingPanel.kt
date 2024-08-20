@@ -6,6 +6,7 @@ import com.formdev.flatlaf.FlatClientProperties
 import com.formdev.flatlaf.FlatLaf
 import com.formdev.flatlaf.extras.FlatSVGIcon
 import com.jthemedetecor.OsThemeDetector
+import java.awt.Color
 import java.io.File
 import java.util.*
 import javax.swing.DefaultComboBoxModel
@@ -66,7 +67,19 @@ class SettingPanel : MiniPanel()
             layout = MigLayout("", "[]20[]")
             val infoPanel = MiniPanel()
             infoPanel.layout = MigLayout("wrap 1, insets 0")
-            infoPanel.add(JLabel("MiniLPA ${BuildConfig.VERSION}").apply { putClientProperty(FlatClientProperties.STYLE_CLASS, "h3") })
+            infoPanel.add(MiniGroup(
+                JLabel("MiniLPA ${BuildConfig.VERSION}").apply { putClientProperty(FlatClientProperties.STYLE_CLASS, "h3") },
+                MiniPanel().apply {
+                    layout = MigLayout("insets 2")
+                    isOpaque = true
+                    background = Color(128, 128, 128, 64)
+                    putClientProperty(FlatClientProperties.STYLE, "arc: 8")
+                    add(JLabel(BuildConfig.SHORT_COMMIT_ID).apply {
+                        foreground = Color(128, 128, 128, 255)
+                        putClientProperty(FlatClientProperties.STYLE, "font: \$mini.font")
+                    })
+                }
+            ))
             infoPanel.add(JLabel(language.`runtime-version`.format("${SystemUtils.JAVA_VM_VERSION} ${SystemUtils.OS_ARCH}")))
             infoPanel.add(JLabel(language.VM.format("${SystemUtils.JAVA_VM_NAME}, ${SystemUtils.JAVA_VM_VENDOR}")))
             add(JLabel(FlatSVGIcon("icons/window.svg", 64, 64)))
