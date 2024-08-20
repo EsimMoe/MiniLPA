@@ -6,6 +6,7 @@ import moe.sekiu.minilpa.backend
 import moe.sekiu.minilpa.filter
 import moe.sekiu.minilpa.freeze
 import moe.sekiu.minilpa.model.Notification
+import moe.sekiu.minilpa.ui.NotificationPanel
 import moe.sekiu.minilpa.ui.WrapLayout
 
 class NotificationList : JPanel()
@@ -53,6 +54,7 @@ class NotificationList : JPanel()
         filterNotification(notificationCards)
         lastSelected = null
         selectionMode = false
+        NotificationPanel.instance.bottomInfo.selectedInfo.text = " "
         removeAll()
         for (card in notificationCards) add(card)
         freeze(this, false)
