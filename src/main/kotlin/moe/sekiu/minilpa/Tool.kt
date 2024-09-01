@@ -1,5 +1,9 @@
 package moe.sekiu.minilpa
 
+import boofcv.factory.fiducial.ConfigQrCode
+import boofcv.factory.fiducial.FactoryFiducial
+import boofcv.kotlin.asGrayU8
+import boofcv.struct.image.GrayU8
 import com.formdev.flatlaf.FlatClientProperties
 import com.formdev.flatlaf.extras.FlatSVGIcon
 import com.formdev.flatlaf.ui.FlatOptionPaneUI
@@ -254,10 +258,13 @@ fun BufferedImage.resize(width : Int, height : Int) : BufferedImage = getScaledI
 
 fun BufferedImage.parseActivationCode() : ActivationCode?
 {
+    val detector = FactoryFiducial.qrcode(ConfigQrCode(), GrayU8::class.java)
+    detector.process(asGrayU8())
+    detector.detections.firstNotNullOfOrNull { ActivationCode.of(it.message) }?.also { return it }
+
     val bitmap = BinaryBitmap(HybridBinarizer(BufferedImageLuminanceSource(this)))
     val results = try { QRCodeMultiReader().decodeMultiple(bitmap) } catch (_ : NotFoundException) { return null }
-    for (result in results) return ActivationCode.of(result.text) ?: continue
-    return null
+    return results.firstNotNullOfOrNull { ActivationCode.of(it.text) }
 }
 
 fun String.openLink()

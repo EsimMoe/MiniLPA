@@ -57,6 +57,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio")
     implementation("io.ktor:ktor-client-websockets")
     implementation("app.softwork:kotlinx-uuid-core:0.0.25")
+    implementation("org.boofcv:boofcv-core:1.1.5")
+    implementation("org.boofcv:boofcv-kotlin:1.1.5")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
     implementation("org.apache.commons:commons-lang3:3.14.0")
