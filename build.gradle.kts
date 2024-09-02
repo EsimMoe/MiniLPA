@@ -28,12 +28,13 @@ import org.panteleyev.jpackage.ImageType
 
 plugins {
     application
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
+    kotlin("jvm") version "2.0.20"
+    kotlin("plugin.serialization") version "2.0.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.ktor.plugin") version "2.3.9"
+    id("io.ktor.plugin") version "3.0.0-beta-2"
     id("org.panteleyev.jpackageplugin") version "1.6.0"
-    id("com.github.gmazzo.buildconfig") version "5.3.5"
+    id("com.github.gmazzo.buildconfig") version "5.4.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 group = "moe.sekiu"
@@ -45,25 +46,25 @@ repositories {
 }
 
 dependencies {
-    implementation("com.formdev:flatlaf:3.4.1")
-    implementation("com.formdev:flatlaf-extras:3.4.1")
-    implementation("com.formdev:flatlaf-intellij-themes:3.4.1")
-    implementation("com.miglayout:miglayout-swing:11.3")
-    implementation("com.charleskorn.kaml:kaml:0.57.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
+    implementation("com.formdev:flatlaf:3.5.1")
+    implementation("com.formdev:flatlaf-extras:3.5.1")
+    implementation("com.formdev:flatlaf-intellij-themes:3.5.1")
+    implementation("com.miglayout:miglayout-swing:11.4.2")
+    implementation("com.charleskorn.kaml:kaml:0.61.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.9.0-RC.2")
     implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-cio")
     implementation("io.ktor:ktor-client-websockets")
-    implementation("app.softwork:kotlinx-uuid-core:0.0.25")
+    implementation("app.softwork:kotlinx-uuid-core:0.1.2")
     implementation("org.boofcv:boofcv-core:1.1.5")
     implementation("org.boofcv:boofcv-kotlin:1.1.5")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.zxing:javase:3.5.3")
-    implementation("org.apache.commons:commons-lang3:3.14.0")
-    implementation("org.slf4j:slf4j-api:2.0.13")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("org.slf4j:slf4j-api:2.1.0-alpha1")
+    implementation("ch.qos.logback:logback-classic:1.5.7")
     implementation("com.github.Dansoftowner:jSystemThemeDetector:3.9.1")
     implementation("org.apache.xmlgraphics:batik-all:1.17")
     implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.11.0")
@@ -95,10 +96,10 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.kohsuke:github-api:1.321")
-        classpath("org.apache.commons:commons-lang3:3.14.0")
-        classpath("io.ktor:ktor-client-core:2.3.9")
-        classpath("io.ktor:ktor-client-cio:2.3.9")
+        classpath("org.kohsuke:github-api:1.324")
+        classpath("org.apache.commons:commons-lang3:3.17.0")
+        classpath("io.ktor:ktor-client-core:3.0.0-beta-2")
+        classpath("io.ktor:ktor-client-cio:3.0.0-beta-2")
     }
 }
 
@@ -120,7 +121,8 @@ tasks.named<KotlinCompilationTask<*>>("compileKotlin").configure {
     compilerOptions.freeCompilerArgs.addAll(
         "-opt-in=kotlin.io.encoding.ExperimentalEncodingApi",
         "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi",
-        "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+        "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+        "-opt-in=kotlin.uuid.ExperimentalUuidApi"
     )
 }
 

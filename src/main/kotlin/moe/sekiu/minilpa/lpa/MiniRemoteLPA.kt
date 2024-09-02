@@ -3,6 +3,7 @@ package moe.sekiu.minilpa.lpa
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
-import kotlinx.uuid.UUID
 import moe.sekiu.minilpa.decode
 import moe.sekiu.minilpa.drop
 import moe.sekiu.minilpa.json
@@ -22,10 +22,10 @@ import moe.sekiu.minilpa.model.Profile
 import moe.sekiu.minilpa.model.RemoteCard
 import moe.sekiu.minilpa.receive
 import moe.sekiu.minilpa.send
-import moe.sekiu.model.WSIO
-import moe.sekiu.model.WSIO.Type.ERROR
-import moe.sekiu.model.WSIO.Type.EXECUTE
-import moe.sekiu.model.WSIO.Type.PAIR
+import moe.sekiu.minilpa.model.WSIO
+import moe.sekiu.minilpa.model.WSIO.Type.ERROR
+import moe.sekiu.minilpa.model.WSIO.Type.EXECUTE
+import moe.sekiu.minilpa.model.WSIO.Type.PAIR
 
 suspend fun main()
 {
@@ -36,7 +36,7 @@ suspend fun main()
 class MiniRemoteLPA : LPABackend<RemoteCard>
 {
     lateinit var wsSession : WebSocketSession
-    val waiting = mutableMapOf<UUID, CompletableDeferred<LPACIO>>()
+    val waiting = mutableMapOf<Uuid, CompletableDeferred<LPACIO>>()
 
     suspend fun setup()
     {
@@ -69,7 +69,7 @@ class MiniRemoteLPA : LPABackend<RemoteCard>
         this.id
     }
 
-    suspend fun waitingResult(id : UUID) = with(CompletableDeferred<LPACIO>())
+    suspend fun waitingResult(id : Uuid) = with(CompletableDeferred<LPACIO>())
     {
         waiting[id] = this
         this.await().payload.lpa.assertSuccess()
