@@ -48,6 +48,8 @@ data class Profile(
         @SerialName("provisioning")
         PROVISIONING,
         @SerialName("operational")
-        OPERATIONAL
+        OPERATIONAL,
+        @SerialName("unknown")
+        UNKNOWN
     }
 }
