@@ -66,47 +66,50 @@ Pop-Location
 
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$DistFolderPath = "$ProjectRootPath/build/dist/"
-
-$OS = if ($IsWindows) { 'Windows' }
-elseif ($IsLinux) { 'Linux' }
-elseif ($IsMacOS) { 'macOS' }
-else { throw 'unknown os' }
-
-$OSArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
-$Arch = if ($OSArchitecture -eq 'X64') { 'x86_64' }
-elseif ($OSArchitecture -eq 'Arm64') { 'aarch64' }
-else { throw 'unkown arch' }
-
-$Name = "MiniLPA-$OS-$Arch"
-
-if ($NativeWayland)
+if ($NativeExecutable)
 {
-    $Name += '-Wayland'
-}
+    $DistFolderPath = "$ProjectRootPath/build/dist/"
 
-if ($NativeExecutableType -eq 'app-image')
-{
-    $AppImageFolderPath = "$DistFolderPath/MiniLPA*"
-    Compress-Archive -Path "$AppImageFolderPath/*" -DestinationPath "$DistFolderPath/$Name.zip" -Force
-    Get-ChildItem -Path $DistFolderPath -Directory | Where-Object { $_.Name -like 'MiniLPA*' } | Remove-Item -Recurse -Force
-}
-else
-{
-    Get-ChildItem -Path $DistFolderPath -File -Filter "MiniLPA*$NativeExecutableType" | ForEach-Object {
-        $DistPath = "$DistFolderPath$Name$( $_.Extension )"
-        Move-Item -Path $_.FullName -Destination $DistPath -Force
-        if ($NativeExecutableType -eq "msi")
-        {
-            if ($IsDirty) { $Guid = [System.Guid]::NewGuid() }
-            else
+    $OS = if ($IsWindows) { 'Windows' }
+    elseif ($IsLinux) { 'Linux' }
+    elseif ($IsMacOS) { 'macOS' }
+    else { throw 'unknown os' }
+
+    $OSArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
+    $Arch = if ($OSArchitecture -eq 'X64') { 'x86_64' }
+    elseif ($OSArchitecture -eq 'Arm64') { 'aarch64' }
+    else { throw 'unkown arch' }
+
+    $Name = "MiniLPA-$OS-$Arch"
+
+    if ($NativeWayland)
+    {
+        $Name += '-Wayland'
+    }
+
+    if ($NativeExecutableType -eq 'app-image')
+    {
+        $AppImageFolderPath = "$DistFolderPath/MiniLPA*"
+        Compress-Archive -Path "$AppImageFolderPath/*" -DestinationPath "$DistFolderPath/$Name.zip" -Force
+        Get-ChildItem -Path $DistFolderPath -Directory | Where-Object { $_.Name -like 'MiniLPA*' } | Remove-Item -Recurse -Force
+    }
+    else
+    {
+        Get-ChildItem -Path $DistFolderPath -File -Filter "MiniLPA*$NativeExecutableType" | ForEach-Object {
+            $DistPath = "$DistFolderPath$Name$( $_.Extension )"
+            Move-Item -Path $_.FullName -Destination $DistPath -Force
+            if ($NativeExecutableType -eq "msi")
             {
-                $CommitId = git rev-parse HEAD
-                $CommitIdBytes = [System.Text.Encoding]::UTF8.GetBytes($CommitId)
-                $GuidBytes = $CommitIdBytes[0..15] -as [Byte[]]
-                $Guid = [System.Guid]::new($guidBytes)
+                if ($IsDirty) { $Guid = [System.Guid]::NewGuid() }
+                else
+                {
+                    $CommitId = git rev-parse HEAD
+                    $CommitIdBytes = [System.Text.Encoding]::UTF8.GetBytes($CommitId)
+                    $GuidBytes = $CommitIdBytes[0..15] -as [Byte[]]
+                    $Guid = [System.Guid]::new($guidBytes)
+                }
+                & "$PSScriptRoot/Update-MSI-ProductCode.ps1" -Path $DistPath -ProductCode "{$($Guid.Guid)}"
             }
-            & "$PSScriptRoot/Update-MSI-ProductCode.ps1" -Path $DistPath -ProductCode "{$($Guid.Guid)}"
         }
     }
 }

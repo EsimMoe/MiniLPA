@@ -95,10 +95,42 @@ jobs:
           name: MiniLPA-${{ env.SHORT_COMMIT_ID }}-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.type }}${{ matrix.wayland && '-Wayland' || '' }}
           path: |
             build/dist/
+  build-standalone-jar:
+    name: Standalone Jar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MiniLPA
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build Standalone Jar
+        shell: pwsh
+        run: |
+          ./scripts/Build.ps1
+
+      - name: Get Short Commit Id
+        shell: pwsh
+        run: |
+          "SHORT_COMMIT_ID=$($Env:GITHUB_SHA.Substring(0, 7))" | Out-File -FilePath $Env:GITHUB_ENV -Append
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MiniLPA-${{ env.SHORT_COMMIT_ID }}-standalone-jar
+          path: |
+            build/libs/MiniLPA-all.jar
   canary-telegram:
     name: Canary(Telegram)
     runs-on: macos-latest
-    needs: [ build-with-zulu, build-with-jbr ]
+    needs: [ build-with-zulu, build-with-jbr, build-standalone-jar ]
     if: "!startsWith(github.ref, 'refs/tags/v')"
     env:
       TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
