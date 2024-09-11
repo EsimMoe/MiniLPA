@@ -30,7 +30,7 @@ plugins {
     application
     kotlin("jvm") version "2.0.20"
     kotlin("plugin.serialization") version "2.0.20"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.0"
     id("io.ktor.plugin") version "3.0.0-beta-2"
     id("org.panteleyev.jpackageplugin") version "1.6.0"
     id("com.github.gmazzo.buildconfig") version "5.4.0"
@@ -229,6 +229,17 @@ tasks.processResources {
         from("${buildPath.resolve("lpac").resolve("$target.zip")}")
     }
     from(buildPath.resolve("languages.zip"))
+}
+
+tasks.shadowJar {
+    minimize {
+        exclude(dependency("ch.qos.logback:logback-classic:.*"))
+        exclude(dependency("net.java.dev.jna:jna:.*"))
+        exclude(dependency("com.formdev:flatlaf-intellij-themes:.*"))
+        exclude(dependency("com.twelvemonkeys.imageio:.*:.*"))
+        exclude(dependency("io.ktor:ktor-client-cio:.*"))
+        exclude(dependency("com.github.jai-imageio:jai-imageio-core:.*"))
+    }
 }
 
 tasks.jpackage {
