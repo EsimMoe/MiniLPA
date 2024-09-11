@@ -114,7 +114,7 @@ jobs:
       - name: Build Standalone Jar
         shell: pwsh
         run: |
-          ./scripts/Build.ps1
+          ./scripts/Build.ps1 -Target all
 
       - name: Get Short Commit Id
         shell: pwsh

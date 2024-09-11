@@ -1,5 +1,8 @@
 #!/usr/bin/env pwsh
 param(
+    [ValidateSet('all', 'macos_universal', 'windows_x86', 'windows_aarch64', 'linux_x86')]
+    [String]$Target,
+
     [Switch]$NativeExecutable,
 
     [ValidateSet('app-image', 'exe', 'msi', 'rpm', 'deb', 'pkg', 'dmg')]
@@ -29,6 +32,11 @@ if ($PSVersionTable.Platform -eq "Unix")
 }
 
 $BuildArgument = @(if($NativeExecutable) { 'jpackage' } else { 'shadowJar' })
+
+if ($Target)
+{
+    $BuildArgument += "-Ptarget=$Target"
+}
 
 if ($NativeExecutable -and $NativeExecutableType)
 {
