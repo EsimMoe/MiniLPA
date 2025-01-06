@@ -13,9 +13,13 @@ import javax.swing.DefaultComboBoxModel
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JComboBox
+import javax.swing.JFormattedTextField
 import javax.swing.JLabel
 import javax.swing.JScrollPane
 import javax.swing.JSeparator
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.text.MaskFormatter
 import kotlinx.coroutines.runBlocking
 import moe.sekiu.minilpa.BuildConfig
 import moe.sekiu.minilpa.action
@@ -37,6 +41,7 @@ import moe.sekiu.minilpa.ui.component.MiniGroup
 import moe.sekiu.minilpa.ui.component.MiniThemePanel
 import moe.sekiu.minilpa.updateTheme
 import moe.sekiu.minilpa.yaml
+import moe.sekiu.minilpa.CONSTANTS
 import net.miginfocom.swing.MigLayout
 import org.apache.commons.lang3.SystemUtils
 
@@ -148,6 +153,25 @@ class SettingPanel : MiniPanel()
                     layout = MigLayout("wrap 1")
                     val openlpacFolder = JButton(language.`open-lpac-folder`).noFocus().action { lpacFolder.openExplorer() }
                     add(MiniGroup(version, openlpacFolder))
+
+                    val aidMask = MaskFormatter(CONSTANTS.ISD_R_AID_FORMAT)
+                    aidMask.setPlaceholderCharacter('0')
+
+                    val customAid = JFormattedTextField(aidMask)
+                    customAid.setValue(setting.lpac.custom_aid)
+                    customAid.columns = 26
+                    customAid.document.addDocumentListener(object : DocumentListener
+                    {
+                        override fun insertUpdate(ev : DocumentEvent) { setting.lpac.custom_aid = customAid.getText() }
+                        override fun removeUpdate(ev : DocumentEvent) { }
+                        override fun changedUpdate(ev : DocumentEvent) { }
+                    })
+
+                    val setAid_default = JButton(language.reset).noFocus().action { customAid.setValue(CONSTANTS.ISD_R_AID_DEFAULT) }
+                    val setAid_5ber = JButton(language.`5ber`).noFocus().action { customAid.setValue(CONSTANTS.ISD_R_AID_5BER) }
+
+                    add(MiniGroup(JLabel("ISD-R AID"), customAid, setAid_default, setAid_5ber))
+
                     add(JCheckBox(language.`libeuicc-apdu-debug`, setting.debug.libeuicc.apdu)
                         .noFocus().apply { action { setting.update { setting.debug.libeuicc.apdu = isSelected } } })
                     add(JCheckBox(language.`libeuicc-http-debug`, setting.debug.libeuicc.http)

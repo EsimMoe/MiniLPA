@@ -75,6 +75,8 @@ class LPACExecutor() : LPABackend<Driver>
         if (!lpacFile.exists() || lpacFile.isDirectory) throw OperationFailureException(language.`lpac-not-found-or-invalid`.format(lpacFile.canonicalPath))
         var initialze = true
         val env = mutableMapOf<String, String>()
+        var aid = setting.lpac.custom_aid.replace(" ", "").trim()
+        if (aid.length == 32) env["LPAC_CUSTOM_ISD_R_AID"] = aid
         if (setting.debug.libeuicc.apdu) env["LIBEUICC_DEBUG_APDU"] = "true"
         if (setting.debug.libeuicc.http) env["LIBEUICC_DEBUG_HTTP"] = "true"
         LocalProfileAssistant.devices.selectedItem?.run { env["DRIVER_IFID"] = cast<Driver>().env }

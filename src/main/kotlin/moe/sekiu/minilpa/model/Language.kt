@@ -115,6 +115,8 @@ data class Language @JvmOverloads constructor(
     val backend : String = "Backend",
     val `lpac-version` : String = "lpac Version: %s",
     val `open-lpac-folder` : String = "Open lpac Folder",
+    val reset : String = "Reset",
+    val `5ber` : String = "5ber",
     val `libeuicc-apdu-debug` : String = "LibEuicc APDU Debug",
     val `libeuicc-http-debug` : String = "LibEuicc HTTP Debug",
     val behavior : String = "Behavior",

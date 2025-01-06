@@ -20,6 +20,7 @@ import moe.sekiu.minilpa.language
 import moe.sekiu.minilpa.lpa.LocalProfileAssistant
 import moe.sekiu.minilpa.ui.component.MiniToolBar
 import moe.sekiu.minilpa.yaml
+import moe.sekiu.minilpa.CONSTANTS
 
 @Serializable
 data class Setting(
@@ -30,6 +31,7 @@ data class Setting(
     var `emoji-design` : EmojiDesign = EmojiDesign.TWEMOJI,
     var `auto-night-mode` : AutoNightMode = AutoNightMode.SYSTEM,
     val debug : Debug = Debug(),
+    val lpac : Lpac = Lpac(),
     val `notification-behavior` : NotificationBehavior = NotificationBehavior(),
     var `show-details` : Boolean = true,
 
@@ -105,6 +107,11 @@ data class Setting(
             var http : Boolean = false
         )
     }
+
+    @Serializable
+    data class Lpac(
+        var custom_aid : String = CONSTANTS.ISD_R_AID_DEFAULT
+    )
 
     @Serializable
     data class NotificationBehavior(

@@ -55,6 +55,14 @@ import org.apache.commons.lang3.SystemUtils
 import org.slf4j.LoggerFactory
 
 
+class CONSTANTS {
+    companion object {
+        const val ISD_R_AID_FORMAT  = "HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH"
+        const val ISD_R_AID_DEFAULT = "A0 00 00 05 59 10 10 FF FF FF FF 89 00 00 01 00"
+        const val ISD_R_AID_5BER    = "A0 00 00 05 59 10 10 FF FF FF FF 89 00 05 05 00"
+    }
+}
+
 inline fun <reified T> Any?.cast() = this as T
 
 inline fun <reified T> Any?.castOrNull() = this as? T?
