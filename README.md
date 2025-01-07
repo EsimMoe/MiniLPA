@@ -54,8 +54,24 @@ But for convenience, pre-packaged JVM versions will be provided for easy install
 Simply download according to your system and architecture. [MiniLPA Releases](https://github.com/EsimMoe/MiniLPA/releases/latest)
 
 #### Using Package Managers
-> ##### macOS Homebrew
+
+[![AUR package](https://img.shields.io/aur/version/minilpa?style=for-the-badge)](https://aur.archlinux.org/packages/minilpa)
+[![AUR package](https://img.shields.io/aur/version/minilpa-git?style=for-the-badge)](https://aur.archlinux.org/packages/minilpa-git)
+
+> ##### AUR (Arch / Manjaro)
+> ```shell
+> yay -S minilpa
 > ```
+
+> ##### AUR GIT (Arch / Manjaro)
+> ```shell
+> yay -S minilpa-git
+> ```
+
+-----
+
+> ##### macOS Homebrew
+> ```shell
 > brew install EsimMoe/homebrew-cask/minilpa
 > ```
 Feel free to contribute more package manager support options!
