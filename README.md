@@ -27,9 +27,10 @@
 
 ## Promotion
 The MiniLPA development team recommends Estkme eUICC cards here, with SiP advanced packaging technology that is less susceptible to damage from external forces.
-When unable to use conventional LPA management cards, you can also use the STK menu for card management, which is convenient and user-friendly.  
-Use `MiniLPA` as a coupon code to get 10% off on your order.
-Click here to enter the product page -> [ESTKme-ECO](https://www.estk.me/product/estkme-eco/?aid=MiniLPA)
+If you are unable to use traditional LPA management cards, you can also use the STK menu for card management, which is convenient and user-friendly.  
+Use `MiniLPA` as coupon code to get 5% discount on SIM cards with your order.
+Click here to add a product to cart. Coupon will be applied automatically. -> [ESTKme-AIR](https://www.estk.me/cart/?add-to-cart=15753&apply-promocode=MiniLPA&aid=MiniLPA) [ESTKme-DRO](https://www.estk.me/cart/?add-to-cart=15761&apply-promocode=MiniLPA&aid=MiniLPA) [ESTKme-ESS](https://www.estk.me/cart/?add-to-cart=15714&apply-promocode=MiniLPA&aid=MiniLPA) [ESTKme-MEG](https://www.estk.me/cart/?add-to-cart=15752&apply-promocode=MiniLPA&aid=MiniLPA)
+
 
 
 ## Features
