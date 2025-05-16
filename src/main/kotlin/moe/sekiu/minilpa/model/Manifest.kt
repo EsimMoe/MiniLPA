@@ -95,9 +95,10 @@ data object EumManifest : Manifest<EumManifest.Manufacturer>()
     {
         @Serializable
         data class Product(
-            val pattern : String,
+            val prefix : String,
             val name : String,
-            val chip : String? = null
+            val chip : String? = null,
+            @SerialName("in-range") val inRange : List<List<Long>> = emptyList()
         )
     }
 
@@ -112,11 +113,25 @@ data object EumManifest : Manifest<EumManifest.Manufacturer>()
 
     fun findProduct(eum : Manufacturer, eid : String) : Manufacturer.Product?
     {
-        val path = Path(eid)
         for (product in eum.products)
         {
-            val matcher = FileSystems.getDefault().getPathMatcher("glob:${product.pattern}")
-            if (matcher.matches(path)) return product
+            if (eid.startsWith(product.prefix))
+            {
+                if (product.inRange.isEmpty()) return product
+
+                val suffix = eid.removePrefix(product.prefix)
+                val number = suffix.takeIf { it.all { c -> c.isDigit() } }?.toLongOrNull()
+                if (number != null)
+                {
+                    for (range in product.inRange)
+                    {
+                        if (range.size == 2 && number in range[0]..range[1])
+                        {
+                            return product
+                        }
+                    }
+                }
+            }
         }
         return null
     }
